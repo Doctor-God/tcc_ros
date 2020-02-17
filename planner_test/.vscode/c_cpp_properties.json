@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/coca/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/coca/catkin_ws/src/beginner_tutorials/include/**",
+                "/home/coca/catkin_ws/src/planner_test/include/**",
+                "/home/coca/catkin_ws/src/robot_setup_tf/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

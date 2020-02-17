@@ -1,0 +1,68 @@
+ <launch>
+    <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+    <arg name="move_forward_only" default="false"/>
+    <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/>
+    <arg name="open_rviz" default="true"/>
+    <arg name="world_name" default="empty"/>
+   
+    <arg name="global_planner" default="global_planner/GlobalPlanner"/>
+   
+    <arg name="use_slam" default="false"/>
+    <arg name="slam_method" default="gmapping"/>
+   
+    <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
+   
+    <arg name="x_pos" default="0.0"/>
+    <arg name="y_pos" default="0.0"/>
+    <arg name="a_pos" default="0.0"/> <!--rotação do robô-->
+    
+
+    <!--Turtlebot 3-->
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+        <arg name="model" value="$(arg model)"/>
+    </include>
+
+    <!--Slam   Use if use_slam is set as true-->
+    <include file="$(find turtlebot3_slam)/launch/turtlebot3_$(arg slam_method).launch" if="$(arg use_slam)">
+        <arg name="model" value="$(arg model)"/>
+        <arg name="configuration_basename" value="$(arg configuration_basename)"/>
+    </include>
+
+    <!--AMCL   Use if use_slam is set as false-->
+    <group unless="$(arg use_slam)">
+        <node pkg="map_server" name="map_server" type="map_server" args="$(find planner_test)/maps/$(arg world_name).yaml"/>
+        <include file="$(find turtlebot3_navigation)/launch/amcl.launch">
+            <arg name="initial_pose_x" value="$(arg x_pos)"/>    
+            <arg name="initial_pose_y" value="$(arg y_pos)"/>    
+            <arg name="initial_pose_a" value="$(arg a_pos)"/>
+        </include>
+    </group>
+
+    <!--Gazebo-->
+    <group>
+        <!--Inicializa o mundo-->
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="worlds/$(arg world_name).world"/>
+        </include>
+        
+        <!--Inicializa o modelo do robô no mundo-->
+        <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+        <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -param robot_description" />
+    </group>
+    
+
+    <!--move_base   if arg teleop is false-->
+    <include file="$(find planner_test)/launch/move_base.launch">
+        <arg name="global_planner" value="$(arg global_planner)"/>
+        <arg name="model" value="$(arg model)"/>
+        <arg name="move_forward_only" value="$(arg move_forward_only)"/>
+    </include>
+
+
+    <!-- rviz -->
+    <group if="$(arg open_rviz)"> 
+        <node pkg="rviz" type="rviz" name="rviz" required="true"
+            args="-d $(find turtlebot3_navigation)/rviz/turtlebot3_navigation.rviz"/>
+    </group>
+
+ </launch>

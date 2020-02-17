@@ -1,0 +1,30 @@
+ <launch>
+ 
+   <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch"></include>
+ <!-- <include file="$(find turtlebot3_bringup)/launch/turtlebot3_gazebo.launch"></include> -->
+
+   <!--<include file="$(find turtlebot3_bringup)/launch/turtlebot3_lidar.launch">
+     <arg name="rgb_processing" value="false" />
+     <arg name="depth_registration" value="false" />
+     <arg name="depth_processing" value="false" />
+     <arg name="scan_topic" value="/scan" />
+   </include>-->
+
+   <!-- Map server -->
+   <!--<arg name="map_file" default="your_map_folder/your_map_file.yaml"/>
+   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
+
+   <!-- Localization -->
+   <!-- <arg name="initial_pose_x" default="0.0"/>
+   <arg name="initial_pose_y" default="0.0"/>
+   <arg name="initial_pose_a" default="0.0"/> -->
+   <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+   <!-- <include file="$(find turtlebot3_navigation)/launch/amcl.launch"> -->
+     <!-- <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+     <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+     <arg name="initial_pose_a" value="$(arg initial_pose_a)"/> -->
+   </include>
+
+   <!-- Move base -->
+
+ </launch>

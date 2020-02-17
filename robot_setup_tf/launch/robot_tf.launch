@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="robot_setup_tf" name="publisher" type="tf_broadcaster"/>
+    <node pkg="robot_setup_tf" name="listener" type="tf_listener"/>
+</launch>
